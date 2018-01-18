@@ -3,15 +3,15 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-mnist = input_data.read_data_sets("data/MNIST_data/", one_hot=True)
+from global_definitions import *
 
+mnist = input_data.read_data_sets("data/MNIST_data/", one_hot=True)
 
 # Setup the model
 a_0 = tf.placeholder(tf.float32, [None, 784])
 y = tf.placeholder(tf.float32, [None, 10])
 
 # TODO: make this program's output stable across runs (the following attempt failed)
-seed = 42
 tf.set_random_seed(seed)
 
 hidden_1 = 50
@@ -80,24 +80,13 @@ d_w_1 = tf.matmul(tf.transpose(a_0), d_z_1)
 # Updating the network
 eta = tf.constant(0.5)  # learning rate
 step = [
-    tf.assign(w_1,
-              tf.subtract(w_1, tf.multiply(eta, d_w_1))),
-    tf.assign(b_1,
-              tf.subtract(b_1, tf.multiply(eta,
-                                           tf.reduce_mean(d_b_1, axis=[0])))),
-    tf.assign(w_2,
-              tf.subtract(w_2, tf.multiply(eta, d_w_2))),
-    tf.assign(b_2,
-              tf.subtract(b_2, tf.multiply(eta,
-                                           tf.reduce_mean(d_b_2, axis=[0])))),
-    tf.assign(w_3,
-
-              tf.subtract(w_3, tf.multiply(eta, d_w_3))),
-    tf.assign(b_3,
-              tf.subtract(b_3, tf.multiply(eta,
-                                           tf.reduce_mean(d_b_3, axis=[0]))))
+    tf.assign(w_1,tf.subtract(w_1, tf.multiply(eta, d_w_1))),
+    tf.assign(b_1,tf.subtract(b_1, tf.multiply(eta,tf.reduce_mean(d_b_1, axis=[0])))),
+    tf.assign(w_2,tf.subtract(w_2, tf.multiply(eta, d_w_2))),
+    tf.assign(b_2,tf.subtract(b_2, tf.multiply(eta,tf.reduce_mean(d_b_2, axis=[0])))),
+    tf.assign(w_3,tf.subtract(w_3, tf.multiply(eta, d_w_3))),
+    tf.assign(b_3,tf.subtract(b_3, tf.multiply(eta,tf.reduce_mean(d_b_3, axis=[0]))))
 ]
-
 
 # Running and testing the training process
 acct_mat = tf.equal(tf.argmax(a_3, 1), tf.argmax(y, 1))
@@ -114,4 +103,3 @@ for i in range(20000):
         res = sess.run(acct_res, feed_dict={a_0: mnist.test.images[:1000],
             y: mnist.test.labels[:1000]})
         print("iter = %-10d" % i, "correct prediction = %d/1000" % res)
-
