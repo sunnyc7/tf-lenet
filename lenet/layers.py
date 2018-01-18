@@ -1,6 +1,6 @@
 import tensorflow as tf
-from support import initializer, visualize_filters
 import numpy as np
+from lenet.support import initializer, visualize_filters
 
 def softmax_layer (input, name = 'softmax'):
     """
