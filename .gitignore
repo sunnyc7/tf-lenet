@@ -1,5 +1,5 @@
 *.pyc
 *.pdf
-data/
 docs/build
 tensorboard/
+venv/
