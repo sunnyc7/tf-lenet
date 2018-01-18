@@ -5,6 +5,16 @@ import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
 from global_definitions import *
 
+## FUNCTIONS
+# Sigmoid function
+def sigma(x):
+    return tf.div(tf.constant(1.0), tf.add(tf.constant(1.0), tf.exp(tf.negative(x))))
+
+# Sigmoid prime
+def sigmaprime(x):
+    return tf.multiply(sigma(x), tf.subtract(tf.constant(1.0), sigma(x)))
+
+
 mnist = input_data.read_data_sets("data/MNIST_data/", one_hot=True)
 
 # Setup the model
@@ -14,19 +24,12 @@ y = tf.placeholder(tf.float32, [None, 10])
 # TODO: make this program's output stable across runs (the following attempt failed)
 tf.set_random_seed(seed)
 
-hidden_1 = 50
-hidden_2 = 50
 w_1 = tf.Variable(tf.truncated_normal([784, hidden_1]))
 b_1 = tf.Variable(tf.truncated_normal([1, hidden_1]))
 w_2 = tf.Variable(tf.truncated_normal([hidden_1, hidden_2]))
 b_2 = tf.Variable(tf.truncated_normal([1, hidden_2]))
 w_3 = tf.Variable(tf.truncated_normal([hidden_2, 10]))
 b_3 = tf.Variable(tf.truncated_normal([1, 10]))
-
-
-# Sigmoid function
-def sigma(x):
-    return tf.div(tf.constant(1.0), tf.add(tf.constant(1.0), tf.exp(tf.negative(x))))
 
 # The forward propagation
 z_1 = tf.add(tf.matmul(a_0, w_1), b_1)
@@ -40,10 +43,6 @@ a_3 = sigma(z_3)
 
 # Loss
 diff = tf.subtract(a_3, y)
-
-# Sigmoid prime
-def sigmaprime(x):
-    return tf.multiply(sigma(x), tf.subtract(tf.constant(1.0), sigma(x)))
 
 # Backward Propagation
 d_z_3 = tf.multiply(diff, sigmaprime(z_3))
@@ -60,8 +59,6 @@ d_w_2 = tf.matmul(tf.transpose(a_1), d_z_2)
 
 # perform svd of d_w_2
 s, u, v = tf.svd(d_w_2)
-# set rank k
-k = 10
 # truncate u, s, v
 u_hat = u[:, :k]
 s_hat = s[:k]
